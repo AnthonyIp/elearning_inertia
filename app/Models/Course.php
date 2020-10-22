@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Foundation\Auth\Access\Authorizable;
 class Course extends Model
 {
-    use HasFactory;
+    use HasFactory, Authorizable;
 
     protected $fillable = ['title', 'description', 'user_id'];
+
+
+    protected $appends = ['update'];
 
     protected static function booted()
     {
@@ -33,5 +36,9 @@ class Course extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getUpdateAttribute() {
+        return $this->can('update-course', $this);
     }
 }
